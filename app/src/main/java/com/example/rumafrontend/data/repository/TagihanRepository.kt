@@ -194,26 +194,6 @@ class TagihanRepository(
             Log.d(TAG, "Tagihan photo updated locally: $id")
 
             
-            if (tagihan.serverId != null && NetworkUtils.isNetworkAvailable(context)) {
-                try {
-                    val file = File(buktiFotoPath)
-                    if (file.exists()) {
-                        val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
-                        val fotoPart = MultipartBody.Part.createFormData("bukti_foto", file.name, requestFile)
-                        
-                        val response = ApiClient.apiService.uploadBuktiFoto(
-                            id = tagihan.serverId.toInt(),
-                            foto = fotoPart
-                        )
-                        
-                        if (response.isSuccessful) {
-                            Log.d(TAG, "Photo synced to backend")
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error syncing photo: ${e.message}", e)
-                }
-            }
             
             Result.success(Unit)
         } catch (e: Exception) {
@@ -238,34 +218,6 @@ class TagihanRepository(
             Log.d(TAG, "Tagihan marked as lunas locally: $id")
             
             
-            if (tagihan.serverId != null && NetworkUtils.isNetworkAvailable(context)) {
-                try {
-                    val tanggalSelesaiStr = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-                        .format(java.util.Date(now))
-                    val tanggalSelesaiBody = tanggalSelesaiStr.toRequestBody("text/plain".toMediaTypeOrNull())
-
-                    var fotoPart: MultipartBody.Part? = null
-                    if (buktiFotoPath != null) {
-                        val file = File(buktiFotoPath)
-                        if (file.exists()) {
-                            val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
-                            fotoPart = MultipartBody.Part.createFormData("bukti_foto", file.name, requestFile)
-                        }
-                    }
-
-                    val response = ApiClient.apiService.tandaiLunas(
-                        id = tagihan.serverId.toInt(),
-                        tanggalSelesai = tanggalSelesaiBody,
-                        buktiFoto = fotoPart
-                    )
-
-                    if (response.isSuccessful) {
-                        Log.d(TAG, "Tandai lunas synced to backend")
-                    }
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error syncing tandai lunas: ${e.message}", e)
-                }
-            }
             
             Result.success(Unit)
         } catch (e: Exception) {

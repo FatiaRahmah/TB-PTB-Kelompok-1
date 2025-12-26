@@ -31,21 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
-data class Item(
-    val id: Int = 0,
-    val text: String,
-    val checked: Boolean = false
-)
-
-data class Category(
-    val id: Int = 0,
-    val name: String,
-    val icon: ImageVector,
-    val items: List<Item> = emptyList(),
-    val expanded: Boolean = true,
-    val editable: Boolean = false
-)
-
 @Composable
 fun ShoppingDetailScreen(
     shoppingItemId: Int,
